@@ -9,7 +9,8 @@ import RPi.GPIO as GPIO
 class FilamentReloadedPlugin(octoprint.plugin.StartupPlugin,
                              octoprint.plugin.EventHandlerPlugin,
                              octoprint.plugin.TemplatePlugin,
-                             octoprint.plugin.SettingsPlugin):
+                             octoprint.plugin.SettingsPlugin,
+														 octoprint.plugin.BlueprintPlugin):
 
     def initialize(self):
         self._logger.info("Running RPi.GPIO version '{0}'".format(GPIO.VERSION))
@@ -38,6 +39,13 @@ class FilamentReloadedPlugin(octoprint.plugin.StartupPlugin,
     def get_template_configs(self):
         return [dict(type="settings", custom_bindings=False)]
 
+		@octoprint.plugin.BlueprintPlugin.route("/status", methods=["GET"])
+		def check_status(self):
+			  status = "-1"
+			  if self.PIN_FILAMENT != -1:
+				    status = "1" if GPIO.input(self.PIN_FILAMENT) else "0"
+			  return jsonify( status = status )
+	
     def on_event(self, event, payload):
         if event == Events.PRINT_STARTED:  # If a new print is beginning
             self._logger.info("Printing started: Filament sensor enabled")
@@ -61,12 +69,12 @@ class FilamentReloadedPlugin(octoprint.plugin.StartupPlugin,
     def get_update_information(self):
         return dict(
             octoprint_filament=dict(
-                displayName="Filament Sensor Reloaded",
+                displayName="Filament Sensor Reduex",
                 displayVersion=self._plugin_version,
 
                 # version check: github repository
                 type="github_release",
-                user="kontakt",
+                user="borrillis",
                 repo="Octoprint-Filament-Reloaded",
                 current=self._plugin_version,
 
@@ -75,7 +83,7 @@ class FilamentReloadedPlugin(octoprint.plugin.StartupPlugin,
             )
         )
 
-__plugin_name__ = "Filament Sensor Reloaded"
+__plugin_name__ = "Filament Sensor Redeux"
 __plugin_version__ = "1.0.1"
 
 def __plugin_load__():
