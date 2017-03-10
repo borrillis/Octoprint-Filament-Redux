@@ -6,11 +6,11 @@ from octoprint.events import eventManager, Events
 from flask import jsonify, make_response
 import RPi.GPIO as GPIO
 
-class FilamentReloadedPlugin(octoprint.plugin.StartupPlugin,
-                             octoprint.plugin.EventHandlerPlugin,
-                             octoprint.plugin.TemplatePlugin,
-                             octoprint.plugin.SettingsPlugin,
-														 octoprint.plugin.BlueprintPlugin):
+class FilamentReduxPlugin(octoprint.plugin.StartupPlugin,
+                          octoprint.plugin.EventHandlerPlugin,
+                          octoprint.plugin.TemplatePlugin,
+                          octoprint.plugin.SettingsPlugin,
+						  octoprint.plugin.BlueprintPlugin):
 
     def initialize(self):
         self._logger.info("Running RPi.GPIO version '{0}'".format(GPIO.VERSION))
@@ -20,7 +20,7 @@ class FilamentReloadedPlugin(octoprint.plugin.StartupPlugin,
         GPIO.setwarnings(False)        # Disable GPIO warnings
 
     def on_after_startup(self):
-        self._logger.info("Filament Sensor Reloaded started")
+        self._logger.info("Filament Sensor Redux started")
         self.pin = int(self._settings.get(["pin"]))
         self.bounce = int(self._settings.get(["bounce"]))
         self.switch = int(self._settings.get(["switch"]))
@@ -39,12 +39,12 @@ class FilamentReloadedPlugin(octoprint.plugin.StartupPlugin,
     def get_template_configs(self):
         return [dict(type="settings", custom_bindings=False)]
 
-		@octoprint.plugin.BlueprintPlugin.route("/status", methods=["GET"])
-		def check_status(self):
-			  status = "-1"
-			  if self.PIN_FILAMENT != -1:
-				    status = "1" if GPIO.input(self.PIN_FILAMENT) else "0"
-			  return jsonify( status = status )
+    @octoprint.plugin.BlueprintPlugin.route("/status", methods=["GET"])
+    def check_status(self):
+            status = "-1"
+            if self.PIN_FILAMENT != -1:
+                status = "1" if GPIO.input(self.PIN_FILAMENT) else "0"
+            return jsonify( status = status )
 	
     def on_event(self, event, payload):
         if event == Events.PRINT_STARTED:  # If a new print is beginning
@@ -69,26 +69,26 @@ class FilamentReloadedPlugin(octoprint.plugin.StartupPlugin,
     def get_update_information(self):
         return dict(
             octoprint_filament=dict(
-                displayName="Filament Sensor Reduex",
+                displayName="Filament Sensor Redux",
                 displayVersion=self._plugin_version,
 
                 # version check: github repository
                 type="github_release",
                 user="borrillis",
-                repo="Octoprint-Filament-Reloaded",
+                repo="Octoprint-Filament-Redux",
                 current=self._plugin_version,
 
                 # update method: pip
-                pip="https://github.com/kontakt/Octoprint-Filament-Reloaded/archive/{target_version}.zip"
+                pip="https://github.com/borrillis/Octoprint-Filament-Redux/archive/{target_version}.zip"
             )
         )
 
-__plugin_name__ = "Filament Sensor Redeux"
+__plugin_name__ = "Filament Sensor Redux"
 __plugin_version__ = "1.0.1"
 
 def __plugin_load__():
     global __plugin_implementation__
-    __plugin_implementation__ = FilamentReloadedPlugin()
+    __plugin_implementation__ = FilamentReduxPlugin()
 
     global __plugin_hooks__
     __plugin_hooks__ = {
