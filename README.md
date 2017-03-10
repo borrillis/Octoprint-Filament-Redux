@@ -1,6 +1,6 @@
 # OctoPrint-FilamentRedux
 
-Based on the Octoprint-Filament plugin by MoonshineSG (https://github.com/MoonshineSG/Octoprint-Filament), and the Octoprint-FilamentReloaded plugin by kontakt, this modification restores the ability to query for the filament status.
+Based on the Octoprint-Filament plugin by MoonshineSG (https://github.com/MoonshineSG/Octoprint-Filament), and the Octoprint-FilamentReloaded plugin by kontakt (https://github.com/kontakt/Octoprint-Filament-Reloaded), this modification restores the ability to query for the filament status.
 
 Future developments are planned to include multiple filament sensors, pop-ups, pre-print validation and custom filament run-out scripting.
 
